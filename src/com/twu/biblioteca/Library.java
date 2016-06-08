@@ -9,6 +9,16 @@ public class Library {
     private ArrayList<Book> libraryBooks;
     private ArrayList<Book> checkedoutBooks;
     private ArrayList<Book> availableBooks;
+
+    public ArrayList<Book> getCheckedoutBooks() {
+        return checkedoutBooks;
+    }
+
+    public ArrayList<Book> getAvailableBooks() {
+        return availableBooks;
+    }
+
+
     public Library() {
         libraryBooks=new ArrayList<Book>();
         checkedoutBooks=new ArrayList<Book>();
@@ -25,6 +35,7 @@ public class Library {
         System.out.println("Please select:");
         System.out.println("1.Lists Books");
         System.out.println("2.Check out Book");
+        System.out.println("3.Return Book");
         System.out.println("9.Quit");
     }
 
@@ -46,6 +57,8 @@ public class Library {
                 case 1:listAvailableBooks();
                     break;
                 case 2:checkoutBook();
+                    break;
+                case 3:returnBook();
                     break;
                 case 9:
                     systemRun=false;
@@ -71,7 +84,7 @@ public class Library {
     }
 
     public boolean checkoutBook(String ...args){
-        System.out.println("Input the book name you want to check out:");
+        System.out.println("Input the book name you want to borrow:");
         String bookName;
         boolean isTest=(args.length!=0);
         if(isTest) {
@@ -80,9 +93,9 @@ public class Library {
         else{
             bookName =getInput();
         }
-        ArrayList<Book> searchResult = getSearchResult(bookName);
+        ArrayList<Book> searchResult = getCheckoutSearchResult(bookName);
         if(searchResult.isEmpty()){
-            System.out.println("Can not find this book!");
+            System.out.println("That book is not available.");
             return false;
         }
         else{
@@ -96,7 +109,7 @@ public class Library {
             if(index>-1) {
                 availableBooks.remove(searchResult.get(index));
                 checkedoutBooks.add(searchResult.get(index));
-                System.out.println("Enjoy the book!");
+                System.out.println("Thank you! Enjoy the book.");
                 return true;
             }
             else{
@@ -127,16 +140,55 @@ public class Library {
         }
     }
 
-    private ArrayList<Book> getSearchResult(String bookName) {
-        ArrayList<Book> searchResult=new ArrayList<Book>();
+    public ArrayList<Book> getCheckoutSearchResult(String bookName) {
+        ArrayList<Book> checkoutSearchResult=new ArrayList<Book>();
         Iterator<Book> it=availableBooks.iterator();
         while(it.hasNext()){
             Book b=it.next();
             if(b.nameEquals(bookName)){
-                searchResult.add(b);
+                checkoutSearchResult.add(b);
             }
         }
-        return searchResult;
+        return checkoutSearchResult;
+    }
+
+    public Book isTheBookBelongsToTheLibrary(String bookName,String authorName){
+        Iterator<Book> it=checkedoutBooks.iterator();
+        while(it.hasNext()){
+            Book book=it.next();
+            if(book.nameAndAuthorEquals(bookName,authorName)){
+                return book;
+            }
+        }
+        return null;
+    }
+
+    public boolean returnBook(String ...args){
+        String bookName;
+        String authorName;
+        boolean isTest=(args.length!=0);
+        if(isTest) {
+            bookName =args[0];
+            authorName=args[1];
+        }
+        else{
+            System.out.println("Input the book name you want to return:");
+            bookName =getInput();
+            System.out.println("Input the book's author name:");
+            authorName=getInput();
+        }
+        Book returnBook=isTheBookBelongsToTheLibrary(bookName,authorName);
+        if(returnBook==null){
+            System.out.println("That is not a valid book to return.");
+            return false;
+        }
+        else{
+            availableBooks.add(returnBook);
+            checkedoutBooks.remove(returnBook);
+            System.out.println("Thank you for returning the book.");
+            return true;
+        }
+
     }
 
 

@@ -50,6 +50,10 @@ public class Book {
         return name.equals(bookName);
     }
 
+    public boolean nameAndAuthorEquals(String bookName,String authorName){
+        return name.equals(bookName) && author.equals(authorName);
+    }
+
     @Override
     public String toString() {
         return "name='" + name + '\'' +
