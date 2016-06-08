@@ -28,17 +28,16 @@ public class Person {
         return borrowedBook;
     }
 
-    public boolean BorrowBook(Book book){
-        borrowedBook.add(book);
-        return true;
+    public boolean borrowBook(Book book){
+        return borrowedBook.add(book);
     }
 
-    public boolean ReturnBook(Book book){
+    public boolean returnBook(Book book){
         return borrowedBook.remove(book);
     }
 
     public boolean equals(Object object){
         Person person=(Person)object;
-        return id==person.id;
+        return id.equals(person.id);
     }
 }

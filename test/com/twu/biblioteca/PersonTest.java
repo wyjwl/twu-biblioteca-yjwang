@@ -1,6 +1,9 @@
 package com.twu.biblioteca;
 
+import org.junit.Before;
 import org.junit.Test;
+
+import java.util.GregorianCalendar;
 
 import static org.junit.Assert.*;
 
@@ -11,19 +14,20 @@ public class PersonTest {
 
     @Test
     public void testBorrowBook() throws Exception {
-        Book book=new Book("A","xxx","1990-07-05");
+        Book book=new Book("A","xxx",new GregorianCalendar(2000,1,15));
         Person person=new Person("111","jywang");
-        assertTrue(person.BorrowBook(book));
+        assertTrue(person.borrowBook(book));
+        assertTrue(person.getBorrowedBook().contains(book));
     }
 
     @Test
     public void testReturnBook() throws Exception {
-        Book book=new Book("A","xxx","1990-07-05");
+        Book book=new Book("A","xxx",new GregorianCalendar(2000,1,15));
         Person person=new Person("111","jywang");
-        person.BorrowBook(book);
-        assertTrue(person.ReturnBook(book));
-        assertTrue(person.getBorrowedBook().isEmpty());
-        assertFalse(person.ReturnBook(book));
+        person.borrowBook(book);
+        assertTrue(person.returnBook(book));
+        assertFalse(person.getBorrowedBook().contains(book));
+        assertFalse(person.returnBook(book));
     }
 
     @Test

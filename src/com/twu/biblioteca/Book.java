@@ -1,5 +1,7 @@
 package com.twu.biblioteca;
 
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 
 /**
  * Created by WYJ on 2016/6/6.
@@ -7,9 +9,9 @@ package com.twu.biblioteca;
 public class Book {
     private String name;
     private String author;
-    private String publishTime;
+    private GregorianCalendar publishTime;
 
-    public Book(String name, String author, String publishTime) {
+    public Book(String name, String author, GregorianCalendar publishTime) {
         this.name = name;
         this.author = author;
         this.publishTime = publishTime;
@@ -31,16 +33,32 @@ public class Book {
         this.author = author;
     }
 
-    public String getPublishTime() {
+    public GregorianCalendar getPublishTime() {
         return publishTime;
     }
 
-    public void setPublishTime(String publishTime) {
+    public void setPublishTime(GregorianCalendar publishTime) {
         this.publishTime = publishTime;
     }
 
     public boolean equals(Object object){
         Book book=(Book)object;
-        return name==book.name && author==book.author && publishTime==book.publishTime;
+        return name.equals(book.name) && author.equals(book.author) && publishTime.equals(book.publishTime);
+    }
+
+    public boolean nameEquals(String bookName){
+        return name.equals(bookName);
+    }
+
+    @Override
+    public String toString() {
+        return "name='" + name + '\'' +
+                ", author='" + author + '\'' +
+                ", publishTime=" + getPublishTimeFormat();
+    }
+
+    private String getPublishTimeFormat() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        return formatter.format(publishTime.getTime());
     }
 }
