@@ -12,16 +12,11 @@ public class Book extends LibraryItem{
         super(name,author,publishTime);
     }
 
-    public boolean equals(Object object){
-        Book book=(Book)object;
-        return name.equals(book.name) && author.equals(book.author) && publishTime.equals(book.publishTime);
+    @Override
+    public String toString() {
+        return "name='" + name + '\'' +
+                ", author='" + author + '\'' +
+                ", publishTime=" + getPublishTimeFormat();
     }
 
-    public boolean nameEquals(String bookName){
-        return name.equals(bookName);
-    }
-
-    public boolean nameAndAuthorEquals(String bookName,String authorName){
-        return name.equals(bookName) && author.equals(authorName);
-    }
 }

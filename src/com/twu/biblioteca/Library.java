@@ -6,29 +6,79 @@ import java.util.*;
  * Created by WYJ on 2016/6/7.
  */
 public class Library {
-    private ArrayList<Book> libraryBooks;
-    private ArrayList<Book> checkedoutBooks;
-    private ArrayList<Book> availableBooks;
-
-    public ArrayList<Book> getCheckedoutBooks() {
-        return checkedoutBooks;
-    }
-
-    public ArrayList<Book> getAvailableBooks() {
-        return availableBooks;
-    }
+    private String userSelection;
+    private ArrayList<Person> allUsers;
+    private Person currentUser;
+    private ArrayList<LibraryRecord> libraryRecords;
+    private ArrayList<LibraryItem> libraryItems;
+    private ArrayList<LibraryItem> checkedoutItems;
+    private ArrayList<LibraryItem> availableItems;
 
 
     public Library() {
-        libraryBooks=new ArrayList<Book>();
-        checkedoutBooks=new ArrayList<Book>();
-        availableBooks=new ArrayList<Book>();
-        libraryBooks.add(new Book("book1","author1",new GregorianCalendar(2000,1,1)));
-        libraryBooks.add(new Book("book1","author1",new GregorianCalendar(2000,1,1)));
-        libraryBooks.add(new Book("book2","author2",new GregorianCalendar(2000,2,1)));
-        libraryBooks.add(new Book("book3","author3",new GregorianCalendar(2000,3,1)));
-        libraryBooks.add(new Book("book4","author4",new GregorianCalendar(2000,4,1)));
-        availableBooks=libraryBooks;
+        initLibraryItems();
+        initUsers();
+    }
+
+    public void setCurrentUser(Person currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    public boolean login(){
+        String userName;
+        String password;
+        System.out.println("Please input username:");
+        userName=getInput();
+        System.out.println("Please input password");
+        password=getInput();
+        Iterator<Person> it=allUsers.iterator();
+        while(it.hasNext()){
+            Person person=it.next();
+            if(person.getUserName().equals(userName) && person.getPassword().equals(password)){
+                currentUser=person;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void initUsers() {
+        allUsers=new ArrayList<Person>();
+        allUsers.add(new Person("User1","123456","aaaaaa@gmail.com","Bangalore","123456789","normal"));
+        allUsers.add(new Person("User2","123456","bbbbbb@gmail.com","Pune","987654321","normal"));
+        allUsers.add(new Person("User3","123456","cccccc@gmail.com","Pune","147852369","admin"));
+    }
+
+    public ArrayList<LibraryItem> getCheckedoutBooks() {
+        return checkedoutItems;
+    }
+
+    public ArrayList<LibraryItem> getAvailableBooks() {
+        return availableItems;
+    }
+
+    public ArrayList<LibraryRecord> getLibraryRecords() {
+        return libraryRecords;
+    }
+
+    private void initLibraryItems() {
+        libraryItems=new ArrayList<LibraryItem>();
+        checkedoutItems=new ArrayList<LibraryItem>();
+        availableItems=new ArrayList<LibraryItem>();
+        libraryItems.add(new Book("book1","author1",new GregorianCalendar(2000,1,1)));
+        libraryItems.add(new Book("book1","author1",new GregorianCalendar(2000,1,1)));
+        libraryItems.add(new Book("book2","author2",new GregorianCalendar(2000,2,1)));
+        libraryItems.add(new Book("book3","author3",new GregorianCalendar(2000,3,1)));
+        libraryItems.add(new Book("book4","author4",new GregorianCalendar(2000,4,1)));
+        libraryItems.add(new Movie("movie1","author1",new GregorianCalendar(2000,4,1),9.2));
+        libraryItems.add(new Movie("movie2","author2",new GregorianCalendar(2001,4,1),8.5));
+        libraryItems.add(new Movie("movie3","author3",new GregorianCalendar(2002,4,1),7.8));
+        availableItems=libraryItems;
+        libraryRecords=new ArrayList<LibraryRecord>();
+    }
+
+    public void setUserSelection(String userSelection) {
+        this.userSelection = userSelection;
     }
 
     public void libraryMenu(){
@@ -36,12 +86,22 @@ public class Library {
         System.out.println("1.Lists Books");
         System.out.println("2.Check out Book");
         System.out.println("3.Return Book");
+        System.out.println("4.Lists Movies");
+        System.out.println("5.Check out Movie");
+        System.out.println("6.Return Movie");
         System.out.println("9.Quit");
     }
 
     public void run(){
-        showWelcomeMsg();
-        showSystemMenu();
+        while(true) {
+            if(login()) {
+                showWelcomeMsg();
+                showSystemMenu();
+            }
+            else{
+                System.out.println("Login failed, please try again.");
+            }
+        }
     }
 
     private void showWelcomeMsg() {
@@ -54,11 +114,29 @@ public class Library {
         while(systemRun){
             libraryMenu();
             switch (Integer.parseInt(getInput())){
-                case 1:listAvailableBooks();
+                case 1:
+                    userSelection="book";
+                    listAvailableItems();
                     break;
-                case 2:checkoutBook();
+                case 2:
+                    userSelection="book";
+                    checkoutItem();
                     break;
-                case 3:returnBook();
+                case 3:
+                    userSelection="book";
+                    returnItem();
+                    break;
+                case 4:
+                    userSelection="movie";
+                    listAvailableItems();
+                    break;
+                case 5:
+                    userSelection="movie";
+                    checkoutItem();
+                    break;
+                case 6:
+                    userSelection="movie";
+                    returnItem();
                     break;
                 case 9:
                     systemRun=false;
@@ -70,11 +148,16 @@ public class Library {
         }
     }
 
-    public void listAvailableBooks() {
-        Iterator<Book> it=availableBooks.iterator();
-        while(it.hasNext()){
-            Book b=it.next();
-            System.out.println(b);
+    public void listAvailableItems() {
+        Iterator<LibraryItem> it=availableItems.iterator();
+        while (it.hasNext()) {
+            LibraryItem item = it.next();
+            if(userSelection.equals("book") && (item instanceof Book)){
+                System.out.println(item);
+            }
+            else if(userSelection.equals("movie") && (item instanceof Movie)){
+                System.out.println(item);
+            }
         }
     }
 
@@ -83,19 +166,19 @@ public class Library {
         return userInput.nextLine();
     }
 
-    public boolean checkoutBook(String ...args){
-        System.out.println("Input the book name you want to borrow:");
-        String bookName;
+    public boolean checkoutItem(String ...args){
+        System.out.println("Input the "+userSelection+" name you want to borrow:");
+        String itemName;
         boolean isTest=(args.length!=0);
         if(isTest) {
-            bookName =args[0];
+            itemName =args[0];
         }
         else{
-            bookName =getInput();
+            itemName =getInput();
         }
-        ArrayList<Book> searchResult = getCheckoutSearchResult(bookName);
+        ArrayList<LibraryItem> searchResult = getCheckoutSearchResult(itemName);
         if(searchResult.isEmpty()){
-            System.out.println("That book is not available.");
+            System.out.println("That "+userSelection+" is not available.");
             return false;
         }
         else{
@@ -107,9 +190,10 @@ public class Library {
                 index = getCheckoutIndex(searchResult);
             }
             if(index>-1) {
-                availableBooks.remove(searchResult.get(index));
-                checkedoutBooks.add(searchResult.get(index));
-                System.out.println("Thank you! Enjoy the book.");
+                availableItems.remove(searchResult.get(index));
+                checkedoutItems.add(searchResult.get(index));
+                libraryRecords.add(new LibraryRecord(currentUser,searchResult.get(index),"Checkout",new GregorianCalendar()));
+                System.out.println("Thank you! Enjoy the "+userSelection+".");
                 return true;
             }
             else{
@@ -118,14 +202,14 @@ public class Library {
         }
     }
 
-    private int getCheckoutIndex(ArrayList<Book> searchResult,int ...args) {
+    private int getCheckoutIndex(ArrayList<LibraryItem> searchResult,int ...args) {
         int index=1;
-        Iterator<Book> it;
+        Iterator<LibraryItem> it;
         it=searchResult.iterator();
         System.out.println("Which one you want to borrow?");
         while(it.hasNext()){
-            Book b=it.next();
-            System.out.println(index+++"."+b);
+            LibraryItem item=it.next();
+            System.out.println(index+++"."+item);
         }
         if(args.length==0) {
             int input = Integer.parseInt(getInput()) - 1;
@@ -140,51 +224,55 @@ public class Library {
         }
     }
 
-    public ArrayList<Book> getCheckoutSearchResult(String bookName) {
-        ArrayList<Book> checkoutSearchResult=new ArrayList<Book>();
-        Iterator<Book> it=availableBooks.iterator();
+    public ArrayList<LibraryItem> getCheckoutSearchResult(String itemName) {
+        ArrayList<LibraryItem> checkoutSearchResult=new ArrayList<LibraryItem>();
+        Iterator<LibraryItem> it=availableItems.iterator();
         while(it.hasNext()){
-            Book b=it.next();
-            if(b.nameEquals(bookName)){
-                checkoutSearchResult.add(b);
+            LibraryItem item=it.next();
+            if(item.nameEquals(itemName) && userSelection.equals("book") && (item instanceof Book)){
+                checkoutSearchResult.add(item);
+            }
+            else if(item.nameEquals(itemName) && userSelection.equals("movie") && (item instanceof Movie)){
+                checkoutSearchResult.add(item);
             }
         }
         return checkoutSearchResult;
     }
 
-    public Book isTheBookBelongsToTheLibrary(String bookName,String authorName){
-        Iterator<Book> it=checkedoutBooks.iterator();
+    public LibraryItem isTheItemBelongsToTheLibrary(String itemName,String authorName){
+        Iterator<LibraryItem> it=checkedoutItems.iterator();
         while(it.hasNext()){
-            Book book=it.next();
-            if(book.nameAndAuthorEquals(bookName,authorName)){
-                return book;
+            LibraryItem item=it.next();
+            if(item.nameAndAuthorEquals(itemName,authorName)){
+                return item;
             }
         }
         return null;
     }
 
-    public boolean returnBook(String ...args){
-        String bookName;
+    public boolean returnItem(String ...args){
+        String itemName;
         String authorName;
         boolean isTest=(args.length!=0);
         if(isTest) {
-            bookName =args[0];
+            itemName =args[0];
             authorName=args[1];
         }
         else{
-            System.out.println("Input the book name you want to return:");
-            bookName =getInput();
-            System.out.println("Input the book's author name:");
+            System.out.println("Input the "+userSelection+" name you want to return:");
+            itemName =getInput();
+            System.out.println("Input the "+userSelection+" author name:");
             authorName=getInput();
         }
-        Book returnBook=isTheBookBelongsToTheLibrary(bookName,authorName);
-        if(returnBook==null){
+        LibraryItem returnItem=isTheItemBelongsToTheLibrary(itemName,authorName);
+        if(returnItem==null){
             System.out.println("That is not a valid book to return.");
             return false;
         }
         else{
-            availableBooks.add(returnBook);
-            checkedoutBooks.remove(returnBook);
+            availableItems.add(returnItem);
+            checkedoutItems.remove(returnItem);
+            libraryRecords.add(new LibraryRecord(currentUser,returnItem,"Return", new GregorianCalendar()));
             System.out.println("Thank you for returning the book.");
             return true;
         }

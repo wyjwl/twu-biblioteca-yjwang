@@ -41,11 +41,17 @@ public abstract class LibraryItem {
         this.publishTime = publishTime;
     }
 
-    @Override
-    public String toString() {
-        return "name='" + name + '\'' +
-                ", author='" + author + '\'' +
-                ", publishTime=" + getPublishTimeFormat();
+    public boolean equals(Object object){
+        LibraryItem item=(LibraryItem)object;
+        return name.equals(item.name) && author.equals(item.author) && publishTime.equals(item.publishTime);
+    }
+
+    public boolean nameEquals(String bookName){
+        return name.equals(bookName);
+    }
+
+    public boolean nameAndAuthorEquals(String bookName,String authorName){
+        return name.equals(bookName) && author.equals(authorName);
     }
 
     public String getPublishTimeFormat() {

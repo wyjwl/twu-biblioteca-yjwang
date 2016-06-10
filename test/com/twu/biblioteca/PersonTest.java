@@ -15,7 +15,7 @@ public class PersonTest {
     @Test
     public void testBorrowBook() throws Exception {
         Book book=new Book("A","xxx",new GregorianCalendar(2000,1,15));
-        Person person=new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx");
+        Person person=new Person("User1","123456","396651773@qq.com","Wuhan","1777180xxxx","Normal");
         assertTrue(person.borrowBook(book));
         assertTrue(person.getBorrowedBook().contains(book));
     }
@@ -23,7 +23,7 @@ public class PersonTest {
     @Test
     public void testReturnBook() throws Exception {
         Book book=new Book("A","xxx",new GregorianCalendar(2000,1,15));
-        Person person=new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx");
+        Person person=new Person("User1","123456","396651773@qq.com","Wuhan","1777180xxxx","Normal");
         person.borrowBook(book);
         assertTrue(person.returnBook(book));
         assertFalse(person.getBorrowedBook().contains(book));
@@ -32,13 +32,13 @@ public class PersonTest {
 
     @Test
     public void testEquals() throws Exception {
-        assertTrue(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx")
-                .equals(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx")));
-        assertTrue(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx")
-                .equals(new Person("111","jywang111","396651773@qq.com","Wuhan","1777180xxxx")));
-        assertFalse(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx")
-                .equals(new Person("222","jywang","396651773@qq.com","Wuhan","1777180xxxx")));
-        assertFalse(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx")
-                .equals(new Person("222","jywang222","396651773@qq.com","Wuhan","1777180xxxx")));
+        assertTrue(new Person("yjwang","123456","396651773@qq.com","Wuhan","1777180xxxx","Normal")
+                .equals(new Person("yjwang","123456","396651773@qq.com","Wuhan","1777180xxxx","Normal")));
+        assertTrue(new Person("yjwang","123456","396651773@qq.com","Wuhan","1777180xxxx","Normal")
+                .equals(new Person("yjwang","12345678","396651773@qq.com","Wuhan","1777180xxxx","Normal")));
+        assertFalse(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx","Normal")
+                .equals(new Person("222","jywang","396651773@qq.com","Wuhan","1777180xxxx","Normal")));
+        assertFalse(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx","Normal")
+                .equals(new Person("222","jywang222","396651773@qq.com","Wuhan","1777180xxxx","Normal")));
     }
 }
