@@ -15,7 +15,7 @@ public class PersonTest {
     @Test
     public void testBorrowBook() throws Exception {
         Book book=new Book("A","xxx",new GregorianCalendar(2000,1,15));
-        Person person=new Person("111","jywang");
+        Person person=new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx");
         assertTrue(person.borrowBook(book));
         assertTrue(person.getBorrowedBook().contains(book));
     }
@@ -23,7 +23,7 @@ public class PersonTest {
     @Test
     public void testReturnBook() throws Exception {
         Book book=new Book("A","xxx",new GregorianCalendar(2000,1,15));
-        Person person=new Person("111","jywang");
+        Person person=new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx");
         person.borrowBook(book);
         assertTrue(person.returnBook(book));
         assertFalse(person.getBorrowedBook().contains(book));
@@ -32,9 +32,13 @@ public class PersonTest {
 
     @Test
     public void testEquals() throws Exception {
-        assertTrue(new Person("1","yjwang").equals(new Person("1","yjwang")));
-        assertTrue(new Person("1","yjwang").equals(new Person("1","yjwang111")));
-        assertFalse(new Person("1","yjwang").equals(new Person("2","yjwang")));
-        assertFalse(new Person("1","yjwang").equals(new Person("2","yjwang111")));
+        assertTrue(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx")
+                .equals(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx")));
+        assertTrue(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx")
+                .equals(new Person("111","jywang111","396651773@qq.com","Wuhan","1777180xxxx")));
+        assertFalse(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx")
+                .equals(new Person("222","jywang","396651773@qq.com","Wuhan","1777180xxxx")));
+        assertFalse(new Person("111","jywang","396651773@qq.com","Wuhan","1777180xxxx")
+                .equals(new Person("222","jywang222","396651773@qq.com","Wuhan","1777180xxxx")));
     }
 }
