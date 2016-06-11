@@ -58,4 +58,11 @@ public abstract class LibraryItem {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         return formatter.format(publishTime.getTime());
     }
+
+    @Override
+    public String toString() {
+        return "name='" + name + '\'' +
+                ", author='" + author + '\'' +
+                ", publishTime=" + getPublishTimeFormat();
+    }
 }

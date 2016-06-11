@@ -14,6 +14,8 @@ import static org.junit.Assert.*;
  */
 public class LibraryTest {
     Library library=new Library();
+    Person normalUser=new Person("User1","123456","bbbbbb@gmail.com","Pune","987654321","normal");
+    Person admin= new Person("User3","123456","cccccc@gmail.com","Pune","147852369","admin");
     LibraryItem book1=new Book("book1","author1",new GregorianCalendar(2000,1,1));
     LibraryItem book2=new Book("book2","author2",new GregorianCalendar(2000,2,1));
     LibraryItem book3=new Book("book3","author3",new GregorianCalendar(2000,3,1));
@@ -75,7 +77,7 @@ public class LibraryTest {
     }
 
     @Test
-    public void testLibraryMenu() throws Exception {
+    public void testLibraryMenuForNormalUser() throws Exception {
         String expectOutput="Please select:\r\n" +
                 "1.Lists Books\r\n" +
                 "2.Check out Book\r\n"+
@@ -83,8 +85,19 @@ public class LibraryTest {
                 "4.Lists Movies\r\n"+
                 "5.Check out Movie\r\n"+
                 "6.Return Movie\r\n"+
+                "7.My Information\r\n"+
                 "9.Quit";
         ByteArrayOutputStream outContent = getByteArrayOutputStream();
+        library.setCurrentUser(normalUser);
+        library.libraryMenu();
+        assertEquals(expectOutput, outContent.toString().trim());
+    }
+
+    @Test
+    public void testLibraryMenuForAdmin() throws Exception {
+        String expectOutput="1.Check library record";
+        ByteArrayOutputStream outContent = getByteArrayOutputStream();
+        library.setCurrentUser(admin);
         library.libraryMenu();
         assertEquals(expectOutput, outContent.toString().trim());
     }
@@ -103,7 +116,7 @@ public class LibraryTest {
     }
 
     @Test
-    public void testCheckoutBook() throws Exception {
+    public void testCheckoutItem() throws Exception {
         library.setCurrentUser(new Person("User1","123456","aaaaaa@gmail.com","Bangalore","123456789","normal"));
         testMultipleSameItemCheckout();
         testOnlyOneItemCheckout();
@@ -112,11 +125,26 @@ public class LibraryTest {
     }
 
     @Test
-    public void testReturnBook() throws Exception {
+    public void testReturnItem() throws Exception {
         library.setCurrentUser(new Person("User1","123456","aaaaaa@gmail.com","Bangalore","123456789","normal"));
         testReturnItemBelongsToTheLibrary();
         testReturnItemDontBelongToTheLibrary();
         System.out.println(library.getLibraryRecords());
     }
 
+    @Test
+    public void testLogin() throws Exception {
+        assertTrue(library.login("User1","123456"));
+        assertTrue(library.login("User2","123456"));
+        assertFalse(library.login("User4","123456"));
+    }
+
+    @Test
+    public void testShowCurrentUserInfo() throws Exception {
+        String expectOutput="userName='User1', email='bbbbbb@gmail.com', address='Pune', phoneNumber='987654321', level='normal', borrowedItem=[]";
+        ByteArrayOutputStream outContent = getByteArrayOutputStream();
+        library.setCurrentUser(normalUser);
+        library.showCurrentUserInfo();
+        assertEquals(expectOutput, outContent.toString().trim());
+    }
 }

@@ -46,8 +46,8 @@ public class LibraryRecord {
     @Override
     public String toString() {
         return "User=" + person.getUserName() +
-                ", item=" + item +
-                ", state='" + state + '\'' +
+                ", item=" + item.getName()+"(author="+item.getAuthor()+")" +
+                ", state=" + state +
                 ", Date=" + getTimeFormat();
     }
 }

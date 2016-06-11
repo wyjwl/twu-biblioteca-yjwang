@@ -13,7 +13,7 @@ public class Person {
     private String address;
     private String phoneNumber;
     private String level;
-    private ArrayList<Book> borrowedBook;
+    private ArrayList<LibraryItem> borrowedItem;
 
 
     public Person(String userName, String password, String email, String address, String phoneNumber, String level) {
@@ -23,7 +23,7 @@ public class Person {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.level = level;
-        borrowedBook=new ArrayList<Book>();
+        borrowedItem=new ArrayList<LibraryItem>();
     }
 
     public String getUserName() {
@@ -74,20 +74,30 @@ public class Person {
         this.level = level;
     }
 
-    public ArrayList<Book> getBorrowedBook() {
-        return borrowedBook;
+    public ArrayList<LibraryItem> getBorrowedItem() {
+        return borrowedItem;
     }
 
-    public boolean borrowBook(Book book){
-        return borrowedBook.add(book);
+    public boolean borrowItem(LibraryItem item){
+        return borrowedItem.add(item);
     }
 
-    public boolean returnBook(Book book){
-        return borrowedBook.remove(book);
+    public boolean returnItem(LibraryItem item){
+        return borrowedItem.remove(item);
     }
 
     public boolean equals(Object object){
         Person person=(Person)object;
         return userName.equals(person.userName);
+    }
+
+    @Override
+    public String toString() {
+        return "userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", level='" + level + '\'' +
+                ", borrowedItem=" + borrowedItem;
     }
 }

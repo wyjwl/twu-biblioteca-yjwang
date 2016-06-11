@@ -14,7 +14,6 @@ public class Library {
     private ArrayList<LibraryItem> checkedoutItems;
     private ArrayList<LibraryItem> availableItems;
 
-
     public Library() {
         initLibraryItems();
         initUsers();
@@ -24,13 +23,20 @@ public class Library {
         this.currentUser = currentUser;
     }
 
-    public boolean login(){
+    public boolean login(String ...args){
         String userName;
         String password;
-        System.out.println("Please input username:");
-        userName=getInput();
-        System.out.println("Please input password");
-        password=getInput();
+        boolean isTest=(args.length!=0);
+        if(isTest){
+            userName=args[0];
+            password=args[1];
+        }
+        else{
+            System.out.println("Please input username:");
+            userName=getInput();
+            System.out.println("Please input password");
+            password=getInput();
+        }
         Iterator<Person> it=allUsers.iterator();
         while(it.hasNext()){
             Person person=it.next();
@@ -49,6 +55,10 @@ public class Library {
         allUsers.add(new Person("User3","123456","cccccc@gmail.com","Pune","147852369","admin"));
     }
 
+
+    public void showCurrentUserInfo(){
+        System.out.println(currentUser);
+    }
     public ArrayList<LibraryItem> getCheckedoutBooks() {
         return checkedoutItems;
     }
@@ -82,20 +92,26 @@ public class Library {
     }
 
     public void libraryMenu(){
-        System.out.println("Please select:");
-        System.out.println("1.Lists Books");
-        System.out.println("2.Check out Book");
-        System.out.println("3.Return Book");
-        System.out.println("4.Lists Movies");
-        System.out.println("5.Check out Movie");
-        System.out.println("6.Return Movie");
-        System.out.println("9.Quit");
+        if(currentUser.getLevel().equals("normal")) {
+            System.out.println("Please select:");
+            System.out.println("1.Lists Books");
+            System.out.println("2.Check out Book");
+            System.out.println("3.Return Book");
+            System.out.println("4.Lists Movies");
+            System.out.println("5.Check out Movie");
+            System.out.println("6.Return Movie");
+            System.out.println("7.My Information");
+            System.out.println("9.Quit");
+        }
+        else{
+            System.out.println("1.Check library record");
+        }
     }
 
     public void run(){
+        showWelcomeMsg();
         while(true) {
             if(login()) {
-                showWelcomeMsg();
                 showSystemMenu();
             }
             else{
@@ -113,37 +129,55 @@ public class Library {
         boolean systemRun=true;
         while(systemRun){
             libraryMenu();
-            switch (Integer.parseInt(getInput())){
-                case 1:
-                    userSelection="book";
-                    listAvailableItems();
-                    break;
-                case 2:
-                    userSelection="book";
-                    checkoutItem();
-                    break;
-                case 3:
-                    userSelection="book";
-                    returnItem();
-                    break;
-                case 4:
-                    userSelection="movie";
-                    listAvailableItems();
-                    break;
-                case 5:
-                    userSelection="movie";
-                    checkoutItem();
-                    break;
-                case 6:
-                    userSelection="movie";
-                    returnItem();
-                    break;
-                case 9:
-                    systemRun=false;
-                    break;
-                default:
-                    System.out.println("Invalid input, please try again:");
-                    break;
+            if(currentUser.getLevel().equals("normal")) {
+                switch (Integer.parseInt(getInput())) {
+                    case 1:
+                        userSelection = "book";
+                        listAvailableItems();
+                        break;
+                    case 2:
+                        userSelection = "book";
+                        checkoutItem();
+                        break;
+                    case 3:
+                        userSelection = "book";
+                        returnItem();
+                        break;
+                    case 4:
+                        userSelection = "movie";
+                        listAvailableItems();
+                        break;
+                    case 5:
+                        userSelection = "movie";
+                        checkoutItem();
+                        break;
+                    case 6:
+                        userSelection = "movie";
+                        returnItem();
+                        break;
+                    case 7:
+                        showCurrentUserInfo();
+                        break;
+                    case 9:
+                        systemRun = false;
+                        break;
+                    default:
+                        System.out.println("Invalid input, please try again:");
+                        break;
+                }
+            }
+            else{
+                switch (Integer.parseInt(getInput())) {
+                    case 1:
+                        showLibraryRecord();
+                        break;
+                    case 9:
+                        systemRun = false;
+                        break;
+                    default:
+                        System.out.println("Invalid input, please try again:");
+                        break;
+                }
             }
         }
     }
@@ -161,6 +195,13 @@ public class Library {
         }
     }
 
+    public void showLibraryRecord(){
+        Iterator<LibraryRecord> it=libraryRecords.iterator();
+        while(it.hasNext()){
+            LibraryRecord record=it.next();
+            System.out.println(record);
+        }
+    }
     private String getInput() {
         Scanner userInput=new Scanner(System.in);
         return userInput.nextLine();
@@ -192,6 +233,7 @@ public class Library {
             if(index>-1) {
                 availableItems.remove(searchResult.get(index));
                 checkedoutItems.add(searchResult.get(index));
+                currentUser.borrowItem(searchResult.get(index));
                 libraryRecords.add(new LibraryRecord(currentUser,searchResult.get(index),"Checkout",new GregorianCalendar()));
                 System.out.println("Thank you! Enjoy the "+userSelection+".");
                 return true;
@@ -266,14 +308,15 @@ public class Library {
         }
         LibraryItem returnItem=isTheItemBelongsToTheLibrary(itemName,authorName);
         if(returnItem==null){
-            System.out.println("That is not a valid book to return.");
+            System.out.println("That is not a valid "+userSelection+" to return.");
             return false;
         }
         else{
             availableItems.add(returnItem);
             checkedoutItems.remove(returnItem);
+            currentUser.returnItem(returnItem);
             libraryRecords.add(new LibraryRecord(currentUser,returnItem,"Return", new GregorianCalendar()));
-            System.out.println("Thank you for returning the book.");
+            System.out.println("Thank you for returning the "+userSelection+" .");
             return true;
         }
 

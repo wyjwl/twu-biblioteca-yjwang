@@ -13,21 +13,22 @@ import static org.junit.Assert.*;
 public class PersonTest {
 
     @Test
-    public void testBorrowBook() throws Exception {
+    public void testBorrowItem() throws Exception {
         Book book=new Book("A","xxx",new GregorianCalendar(2000,1,15));
         Person person=new Person("User1","123456","396651773@qq.com","Wuhan","1777180xxxx","Normal");
-        assertTrue(person.borrowBook(book));
-        assertTrue(person.getBorrowedBook().contains(book));
+        assertTrue(person.borrowItem(book));
+        assertTrue(person.getBorrowedItem().contains(book));
     }
 
     @Test
-    public void testReturnBook() throws Exception {
+    public void testReturnItem() throws Exception {
         Book book=new Book("A","xxx",new GregorianCalendar(2000,1,15));
         Person person=new Person("User1","123456","396651773@qq.com","Wuhan","1777180xxxx","Normal");
-        person.borrowBook(book);
-        assertTrue(person.returnBook(book));
-        assertFalse(person.getBorrowedBook().contains(book));
-        assertFalse(person.returnBook(book));
+        person.borrowItem(book);
+        assertTrue(person.getBorrowedItem().contains(book));
+        assertTrue(person.returnItem(book));
+        assertFalse(person.getBorrowedItem().contains(book));
+        assertFalse(person.returnItem(book));
     }
 
     @Test
